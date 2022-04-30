@@ -9,3 +9,20 @@ You can use load this module by putting
 ["external.kanban"] = {},
 ```
 into your setup.
+You can configure which types of tasks to display with the `task_states` field in the config.
+
+The default values look like this:
+```lua
+{
+    task_states = {
+        "undone",
+        "done",
+        "pending",
+        "cancelled",
+        "uncertain",
+        "urgent",
+        "recurring",
+        "on_hold",
+    }
+}
+```

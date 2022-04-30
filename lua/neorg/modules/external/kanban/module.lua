@@ -32,17 +32,6 @@ local highlights = {
     ["on_hold"] = "NeorgTodoItem1OnHold",
 }
 
-local task_states = {
-    "undone",
-    "done",
-    "pending",
-    "cancelled",
-    "uncertain",
-    "urgent",
-    "recurring",
-    "on_hold",
-}
-
 local ns = vim.api.nvim_create_namespace("neorg-kanban")
 
 local module = neorg.modules.create("external.kanban")
@@ -77,7 +66,7 @@ module.private = {
         end
         local state_tasks = module.private.get_state_tasks()
         local non_empty_states = {}
-        for _, state in ipairs(task_states) do
+        for _, state in ipairs(module.config.public.task_states) do
             if state_tasks[state] and state_tasks[state] ~= {} then
                 table.insert(non_empty_states, state)
             end
@@ -126,7 +115,7 @@ module.private = {
         if not module.private.is_open then
             return
         end
-        for _, state in ipairs(task_states) do
+        for _, state in ipairs(module.config.public.task_states) do
             if numbers.winnrs[state] then
                 vim.api.nvim_win_close(numbers.winnrs[state], true)
                 numbers.winnrs[state] = nil
@@ -147,7 +136,18 @@ module.private = {
     end,
 }
 
-module.config.public = {}
+module.config.public = {
+    task_states = {
+        "undone",
+        "done",
+        "pending",
+        "cancelled",
+        "uncertain",
+        "urgent",
+        "recurring",
+        "on_hold",
+    },
+}
 
 module.public = {}
 
