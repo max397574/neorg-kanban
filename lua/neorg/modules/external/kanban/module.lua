@@ -52,7 +52,7 @@ module.private = {
         ["pending"] = "Pending",
         ["cancelled"] = "Cancelled",
         ["uncertain"] = "Uncertain",
-        ["urgent"] = "Urgen",
+        ["urgent"] = "Urgent",
         ["recurring"] = "Recurring",
         ["on_hold"] = "On Hold",
     },
