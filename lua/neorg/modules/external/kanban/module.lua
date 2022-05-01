@@ -46,19 +46,21 @@ module.setup = function()
 end
 
 module.private = {
+    titles = {
+        ["undone"] = "Undone",
+        ["done"] = "Done",
+        ["pending"] = "Pending",
+        ["cancelled"] = "Cancelled",
+        ["uncertain"] = "Uncertain",
+        ["urgent"] = "Urgen",
+        ["recurring"] = "Recurring",
+        ["on_hold"] = "On Hold",
+    },
     is_open = false,
     get_state_tasks = function()
-        local tasks_raw = neorg.modules.get_module("core.gtd.queries").get(
-            "tasks"
-        )
-        tasks_raw = neorg.modules.get_module("core.gtd.queries").add_metadata(
-            tasks_raw,
-            "task"
-        )
-        return neorg.modules.get_module("core.gtd.queries").sort_by(
-            "state",
-            tasks_raw
-        )
+        local tasks_raw = neorg.modules.get_module("core.gtd.queries").get("tasks")
+        tasks_raw = neorg.modules.get_module("core.gtd.queries").add_metadata(tasks_raw, "task")
+        return neorg.modules.get_module("core.gtd.queries").sort_by("state", tasks_raw)
     end,
     open = function()
         if module.private.is_open then
@@ -73,23 +75,21 @@ module.private = {
         end
         local width = vim.api.nvim_win_get_width(0)
         local height = vim.api.nvim_win_get_height(0)
-        local single_width = math.floor(
-            (width - (#non_empty_states * 2)) / #non_empty_states
-        )
+        local single_width = math.floor((width - (#non_empty_states * 2)) / #non_empty_states)
 
         for i, state in ipairs(non_empty_states) do
             numbers.bufnrs[state] = vim.api.nvim_create_buf(false, true)
-            local lines = { state }
+            local lines = { " " .. module.private.titles[state] .. " (" .. #state_tasks[state] .. ")" }
             for _, task in ipairs(state_tasks[state] or {}) do
                 table.insert(lines, "- " .. task.content)
             end
-            vim.api.nvim_buf_set_lines(
-                numbers.bufnrs[state],
-                0,
-                -1,
-                false,
-                lines
-            )
+            vim.keymap.set("n", "q", function()
+                module.private.close()
+            end, {
+                buffer = numbers.bufnrs[state],
+            })
+            vim.api.nvim_buf_set_lines(numbers.bufnrs[state], 0, -1, false, lines)
+            vim.api.nvim_buf_set_option(numbers.bufnrs[state], "modifiable", false)
             vim.api.nvim_open_win(numbers.bufnrs[state], false, {
                 relative = "win",
                 win = 0,
@@ -97,17 +97,20 @@ module.private = {
                 height = math.floor(height * 0.8),
                 col = (single_width + 2) * (i - 1),
                 row = math.floor(height * 0.1),
-                border = "single",
+                border = {
+                    "╭",
+                    "─",
+                    "╮",
+                    "│",
+                    "╯",
+                    "─",
+                    "╰",
+                    "│",
+                },
+
                 style = "minimal",
             })
-            vim.api.nvim_buf_add_highlight(
-                numbers.bufnrs[state],
-                ns,
-                highlights[state],
-                0,
-                0,
-                -1
-            )
+            vim.api.nvim_buf_add_highlight(numbers.bufnrs[state], ns, highlights[state], 0, 0, -1)
         end
         module.private.is_open = true
     end,
@@ -175,12 +178,7 @@ module.load = function()
 end
 
 module.on_event = function(event)
-    if
-        vim.tbl_contains(
-            { "core.keybinds", "core.neorgcmd" },
-            event.split_type[1]
-        )
-    then
+    if vim.tbl_contains({ "core.keybinds", "core.neorgcmd" }, event.split_type[1]) then
         if event.split_type[2] == "kanban.toggle" then
             module.private.toggle()
         elseif event.split_type[2] == "kanban.open" then
