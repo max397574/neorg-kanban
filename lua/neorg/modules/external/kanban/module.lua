@@ -21,16 +21,6 @@ local numbers = {
         cancelled = nil,
     },
 }
-local highlights = {
-    ["undone"] = "NeorgTodoItem1Undone",
-    ["done"] = "NeorgTodoItem1Done",
-    ["pending"] = "NeorgTodoItem1Pending",
-    ["cancelled"] = "NeorgTodoItem1Cancelled",
-    ["uncertain"] = "NeorgTodoItem1Uncertain",
-    ["urgent"] = "NeorgTodoItem1Urgent",
-    ["recurring"] = "NeorgTodoItem1Recurring",
-    ["on_hold"] = "NeorgTodoItem1OnHold",
-}
 
 local ns = vim.api.nvim_create_namespace("neorg-kanban")
 
@@ -41,11 +31,22 @@ module.setup = function()
         success = true,
         requires = {
             "core.neorgcmd",
+            "core.gtd.queries",
         },
     }
 end
 
 module.private = {
+    highlights = {
+        ["undone"] = "NeorgTodoItem1Undone",
+        ["done"] = "NeorgTodoItem1Done",
+        ["pending"] = "NeorgTodoItem1Pending",
+        ["cancelled"] = "NeorgTodoItem1Cancelled",
+        ["uncertain"] = "NeorgTodoItem1Uncertain",
+        ["urgent"] = "NeorgTodoItem1Urgent",
+        ["recurring"] = "NeorgTodoItem1Recurring",
+        ["on_hold"] = "NeorgTodoItem1OnHold",
+    },
     titles = {
         ["undone"] = "Undone",
         ["done"] = "Done",
@@ -58,9 +59,9 @@ module.private = {
     },
     is_open = false,
     get_state_tasks = function()
-        local tasks_raw = neorg.modules.get_module("core.gtd.queries").get("tasks")
-        tasks_raw = neorg.modules.get_module("core.gtd.queries").add_metadata(tasks_raw, "task")
-        return neorg.modules.get_module("core.gtd.queries").sort_by("state", tasks_raw)
+        local tasks_raw = module.required["core.gtd.queries"].get("tasks")
+        tasks_raw = module.required["core.gtd.queries"].add_metadata(tasks_raw, "task")
+        return module.required["core.gtd.queries"].sort_by("state", tasks_raw)
     end,
     open = function()
         if module.private.is_open then
@@ -110,7 +111,7 @@ module.private = {
 
                 style = "minimal",
             })
-            vim.api.nvim_buf_add_highlight(numbers.bufnrs[state], ns, highlights[state], 0, 0, -1)
+            vim.api.nvim_buf_add_highlight(numbers.bufnrs[state], ns, module.private.highlights[state], 0, 0, -1)
         end
         module.private.is_open = true
     end,
