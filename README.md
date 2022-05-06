@@ -10,6 +10,8 @@ You can use load this module by putting
 ["external.kanban"] = {},
 ```
 into your setup.
+
+## 🔧 Configuration
 You can configure which types of tasks to display with the `task_states` field in the config.
 
 The default values look like this:
@@ -33,4 +35,5 @@ This module provides three commands:
 - `Neorg kanban open`
 - `Neorg kanban close`
 - `Neorg kanban toggle`
+
 They allow you to open, close and toggle the kanban board.
