@@ -80,7 +80,9 @@ module.private = {
 
         for i, state in ipairs(non_empty_states) do
             numbers.bufnrs[state] = vim.api.nvim_create_buf(false, true)
-            local lines = { " " .. module.private.titles[state] .. " (" .. #state_tasks[state] .. ")" }
+            local lines = {
+                " " .. module.private.titles[state] .. " (" .. #state_tasks[state] .. ")",
+            }
             for _, task in ipairs(state_tasks[state] or {}) do
                 table.insert(lines, "- " .. task.content)
             end
@@ -157,21 +159,24 @@ module.public = {}
 
 module.load = function()
     module.required["core.neorgcmd"].add_commands_from_table({
-        definitions = {
-            kanban = {
-                toggle = {},
-                open = {},
-                close = {},
-            },
-        },
-        data = {
-            kanban = {
-                min_args = 1,
-                max_args = 1,
-                subcommands = {
-                    toggle = { args = 0, name = "kanban.toggle" },
-                    open = { args = 0, name = "kanban.open" },
-                    close = { args = 0, name = "kanban.close" },
+        kanban = {
+            min_args = 1,
+            max_args = 1,
+            subcommands = {
+                toggle = {
+                    args = 0,
+                    name = "kanban.toggle",
+                    callback = module.private.toggle,
+                },
+                open = {
+                    args = 0,
+                    name = "kanban.open",
+                    callback = module.private.open,
+                },
+                close = {
+                    args = 0,
+                    name = "kanban.close",
+                    callback = module.private.close,
                 },
             },
         },
