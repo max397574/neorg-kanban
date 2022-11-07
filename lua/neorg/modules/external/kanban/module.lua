@@ -38,14 +38,14 @@ end
 
 module.private = {
     highlights = {
-        ["undone"] = "NeorgTodoItem1Undone",
-        ["done"] = "NeorgTodoItem1Done",
-        ["pending"] = "NeorgTodoItem1Pending",
-        ["cancelled"] = "NeorgTodoItem1Cancelled",
-        ["uncertain"] = "NeorgTodoItem1Uncertain",
-        ["urgent"] = "NeorgTodoItem1Urgent",
-        ["recurring"] = "NeorgTodoItem1Recurring",
-        ["on_hold"] = "NeorgTodoItem1OnHold",
+        ["undone"] = "@neorg.todo_items.undone.1",
+        ["done"] = "@neorg.todo_items.done.1",
+        ["pending"] = "@neorg.todo_items.pending.1",
+        ["cancelled"] = "@neorg.todo_items.cancelled.1",
+        ["uncertain"] = "@neorg.todo_items.uncertain.1",
+        ["urgent"] = "@neorg.todo_items.urgent.1",
+        ["recurring"] = "@neorg.todo_items.recurring.1",
+        ["on_hold"] = "@neorg.todo_items.on_hold.1",
     },
     titles = {
         ["undone"] = "Undone",
