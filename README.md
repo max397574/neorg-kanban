@@ -1,5 +1,7 @@
 # Neorg Kanban
 
+## This currently doesn't work since the gtd module is being reworked
+
 Neorg Kanban is a neorg module that will allow you to display your gtd tasks in kanban-like floating windows.
 
 ![kanban](https://user-images.githubusercontent.com/81827001/166137546-a9db04fb-23b0-463c-bfb9-c0ad376aaf82.png)
